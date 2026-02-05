@@ -6,6 +6,6 @@
 
 - https://github.com/FunAudioLLM/CosyVoice
 
-## Pedagoģiskā aģenta balss
+## Noderīgi
 
--
+- https://www.youtube.com/watch?v=An4NwL8QSQ4
