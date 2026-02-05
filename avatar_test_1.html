@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Talking Avatar</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --secondary-text: #94a3b8;
+            --avatar-glow: #818cf8;
+            --mouth-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Header */
+        header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Avatar Area */
+        .avatar-stage {
+            height: 250px;
+            background: radial-gradient(circle at center, #2d3e54 0%, #1e293b 70%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.4);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--secondary-text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #64748b;
+        }
+
+        .status-dot.active {
+            background-color: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        /* --- CSS AVATAR DESIGN (The "Orb-Bot") --- */
+        .avatar-head {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 100%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 30px var(--avatar-glow);
+            transition: transform 0.2s ease;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Eyes */
+        .eyes {
+            display: flex;
+            justify-content: space-between;
+            width: 60px;
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .eye {
+            width: 16px;
+            height: 24px;
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+
+        /* Mouth */
+        .mouth {
+            width: 20px;
+            height: 10px;
+            background-color: var(--bg-color);
+            border-radius: 10px;
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: height 0.1s, width 0.1s;
+        }
+
+        /* Speaking Animation Classes */
+        .avatar-head.talking {
+            animation: float 0.5s ease-in-out infinite; /* Move faster when talking */
+        }
+
+        .avatar-head.talking .mouth {
+            animation: talk 0.2s infinite alternate;
+        }
+
+        .avatar-head.talking .eye {
+            animation: blink 3s infinite, look-around 2s infinite; /* Look around when speaking */
+        }
+
+        /* --- KEYFRAMES --- */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes blink {
+            0%, 48%, 52%, 100% { height: 24px; transform: scaleY(1); }
+            50% { height: 2px; transform: scaleY(0.1); }
+        }
+
+        @keyframes look-around {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+
+        @keyframes talk {
+            0% { height: 5px; width: 20px; }
+            100% { height: 25px; width: 30px; }
+        }
+
+        /* Controls Area */
+        .controls {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            resize: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .settings-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .select-group {
+            flex: 1;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .slider-group {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--secondary-text);
+            font-size: 0.8rem;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            flex: 2;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--secondary-text);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            .settings-row {
+                flex-direction: column;
+            }
+            .avatar-stage {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <header>
+            <h1>AI Avatar Simulator</h1>
+        </header>
+
+        <!-- Visual Output Section -->
+        <section class="avatar-stage">
+            <div class="status-badge">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Idle</span>
+            </div>
+
+            <!-- The Avatar Character (CSS Only) -->
+            <div class="avatar-head" id="avatar">
+                <div class="eyes">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                </div>
+                <div class="mouth"></div>
+            </div>
+        </section>
+
+        <!-- Input Controls Section -->
+        <section class="controls">
+            <div>
+                <label for="textInput">What should I say?</label>
+                <textarea id="textInput" placeholder="Type something here and I will speak it...">Hello! I am an AI avatar running entirely in your browser. I can read text, animate my face, and I don't need any external servers to work.</textarea>
+            </div>
+
+            <div class="settings-row">
+                <div class="select-group">
+                    <label for="voiceSelect">Voice</label>
+                    <select id="voiceSelect">
+                        <option value="" disabled selected>Loading voices...</option>
+                    </select>
+                </div>
+                <div class="slider-group">
+                    <span>Speed</span>
+                    <input type="range" id="rate" min="0.5" max="2" value="1" step="0.1">
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn-secondary" id="stopBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </button>
+                <button class="btn-primary" id="speakBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                    Speak
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 1. Element Selectors ---
+        const textInput = document.getElementById('textInput');
+        const voiceSelect = document.getElementById('voiceSelect');
+        const rateInput = document.getElementById('rate');
+        const speakBtn = document.getElementById('speakBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const avatar = document.getElementById('avatar');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+
+        // --- 2. Speech Synthesis Setup ---
+        const synth = window.speechSynthesis;
+        let voices = [];
+
+        // Function to populate the voice dropdown
+        function populateVoices() {
+            voices = synth.getVoices();
+            
+            // Clear existing options
+            voiceSelect.innerHTML = '';
+
+            // Create an option for each voice
+            voices.forEach((voice) => {
+                const option = document.createElement('option');
+                option.textContent = `${voice.name} (${voice.lang})`;
+                
+                if (voice.default) {
+                    option.textContent += ' -- DEFAULT';
+                }
+
+                option.setAttribute('data-lang', voice.lang);
+                option.setAttribute('data-name', voice.name);
+                voiceSelect.appendChild(option);
+            });
+
+            // If voices are empty, show waiting state
+            if (voices.length === 0) {
+                const option = document.createElement('option');
+                option.textContent = "Waiting for voices...";
+                voiceSelect.appendChild(option);
+            }
+        }
+
+        // Browsers load voices asynchronously
+        populateVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = populateVoices;
+        }
+
+        // --- 3. Avatar Logic (Animation Sync) ---
+        function setAvatarState(state) {
+            if (state === 'speaking') {
+                avatar.classList.add('talking');
+                statusDot.classList.add('active');
+                statusText.textContent = "Speaking...";
+                speakBtn.disabled = true;
+                speakBtn.style.opacity = "0.7";
+            } else {
+                avatar.classList.remove('talking');
+                statusDot.classList.remove('active');
+                statusText.textContent = "Idle";
+                speakBtn.disabled = false;
+                speakBtn.style.opacity = "1";
+            }
+        }
+
+        // --- 4. Speaking Logic ---
+        function speak() {
+            // Check if currently speaking to cancel it
+            if (synth.speaking) {
+                console.error('Already speaking...');
+                return;
+            }
+
+            if (textInput.value !== '') {
+                // 1. Create Utterance
+                const utterThis = new SpeechSynthesisUtterance(textInput.value);
+
+                // 2. Apply Settings
+                const selectedOption = voiceSelect.selectedOptions[0];
+                if(selectedOption) {
+                    const selectedName = selectedOption.getAttribute('data-name');
+                    const selectedVoice = voices.find(v => v.name === selectedName);
+                    if (selectedVoice) utterThis.voice = selectedVoice;
+                }
+                utterThis.rate = rateInput.value;
+
+                // 3. Sync Animations
+                utterThis.onstart = () => setAvatarState('speaking');
+                utterThis.onend = () => setAvatarState('idle');
+                utterThis.onerror = (e) => {
+                    console.error('Speech synthesis error', e);
+                    setAvatarState('idle');
+                };
+
+                // 4. Execute
+                synth.speak(utterThis);
+            }
+        }
+
+        // --- 5. Event Listeners ---
+        speakBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            speak();
+        });
+
+        stopBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            synth.cancel();
+            setAvatarState('idle');
+        });
+
+        // Update rate dynamically if possible while speaking (requires restart in some browsers, 
+        // but we will leave it simple for this demo).
+        rateInput.addEventListener('change', () => {
+            if(synth.speaking) {
+                // Optional: Could restart speech here to apply new speed immediately
+            }
+        });
+
+        // Initialize random blinking interval manually for extra liveliness
+        setInterval(() => {
+            // Randomly trigger a blink slightly off the CSS animation cycle
+            // This adds "imperfection" making it feel more alive
+            if(!avatar.classList.contains('talking') && Math.random() > 0.7) {
+                 const eyes = document.querySelectorAll('.eye');
+                 eyes.forEach(eye => {
+                     eye.style.transform = 'scaleY(0.1)';
+                     setTimeout(() => {
+                         eye.style.transform = 'scaleY(1)';
+                     }, 150);
+                 });
+            }
+        }, 3000);
+
+    </script>
+</body>
+</html>
