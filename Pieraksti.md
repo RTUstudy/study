@@ -10,6 +10,10 @@
 
 - https://www.youtube.com/watch?v=An4NwL8QSQ4
 - https://www.youtube.com/watch?v=gqmSKEUpRv8
+- https://www.youtube.com/watch?v=UOew6-0AC3w
+
+## Noderīgi citi
+
 - https://www.youtube.com/watch?v=i_1C-MLh5K8
 
 ## Prompt
