@@ -17,9 +17,12 @@
 - https://www.youtube.com/watch?v=i_1C-MLh5K8
 
 ## Termināla komandas
-- source venv/bin/activate
-- python3 .\agent dev
+- python3 -m venv venv (izveido virtuālo python vidi)
+- source venv/bin/activate (aktivizē virtuālo python vidi)
+- pip install -r requirements.txt (instalē nepieciešamā bibliotēkas)
+- pip install -U ddgs (instalē nepieciešamo DuckDuckGo meklēšanas rīka bibliotēku)
+- python3 ./agent.py dev (Ielādē python scriptu agent.py)
 
-## Virtuālā vide
+## Saskartnes vide
 - https://agents-playground.livekit.io/
  
