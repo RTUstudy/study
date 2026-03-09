@@ -16,8 +16,10 @@
 
 - https://www.youtube.com/watch?v=i_1C-MLh5K8
 
-## Prompt
+## Termināla komandas
 - source venv/bin/activate
 - python3 .\agent dev
+
+## Virtuālā vide
 - https://agents-playground.livekit.io/
-- 
+ 
