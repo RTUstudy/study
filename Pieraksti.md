@@ -5,6 +5,7 @@
 ## Pedagoģiskā aģenta balss
 
 - https://github.com/FunAudioLLM/CosyVoice
+- https://ollama.com/jobautomation/OpenEuroLLM-Latvian:latest
 
 ## AI voice agent
 
