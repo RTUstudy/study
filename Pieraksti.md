@@ -6,6 +6,7 @@
 
 - https://github.com/FunAudioLLM/CosyVoice
 - https://ollama.com/jobautomation/OpenEuroLLM-Latvian:latest
+- https://ai.google.dev/gemini-api/docs/speech-generation
 
 ## AI voice agent
 
