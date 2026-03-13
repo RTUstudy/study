@@ -7,6 +7,8 @@
 - https://github.com/FunAudioLLM/CosyVoice
 - https://ollama.com/jobautomation/OpenEuroLLM-Latvian:latest
 - https://ai.google.dev/gemini-api/docs/speech-generation
+- lv-LV-Chirp3-HD-Leda
+- 
 
 ## AI voice agent
 
