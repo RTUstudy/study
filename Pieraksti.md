@@ -8,7 +8,7 @@
 - https://ollama.com/jobautomation/OpenEuroLLM-Latvian:latest
 - https://ai.google.dev/gemini-api/docs/speech-generation
 - lv-LV-Chirp3-HD-Leda
-- 
+- https://docs.cloud.google.com/text-to-speech/docs/list-voices-and-types
 
 ## AI voice agent
 
