@@ -29,4 +29,6 @@
 
 ## Saskartnes vide
 - https://agents-playground.livekit.io/
+- https://cursor.com/download        vide skripta rediģēšanai
+- 
  
