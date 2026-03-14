@@ -30,5 +30,6 @@
 ## Saskartnes vide
 - https://agents-playground.livekit.io/
 - https://cursor.com/download        vide skripta rediģēšanai
+- go install github.com/livekit/livekit-cli/cmd/livekit-cli@latest
 - 
  
